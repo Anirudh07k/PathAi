@@ -1,0 +1,301 @@
+{
+  "skills": [
+    {
+      "name": "Python",
+      "aliases": [
+        "python programming",
+        "python coding"
+      ],
+      "prerequisites": []
+    },
+    {
+      "name": "Programming Fundamentals",
+      "aliases": [
+        "programming",
+        "programming basics",
+        "coding fundamentals"
+      ],
+      "prerequisites": []
+    },
+    {
+      "name": "Data Structures",
+      "aliases": [
+        "data structure",
+        "data structures and algorithms",
+        "dsa"
+      ],
+      "prerequisites": [
+        "Programming Fundamentals"
+      ]
+    },
+    {
+      "name": "Git",
+      "aliases": [
+        "version control",
+        "git version control"
+      ],
+      "prerequisites": [
+        "Programming Fundamentals"
+      ]
+    },
+    {
+      "name": "SQL",
+      "aliases": [
+        "database sql",
+        "structured query language"
+      ],
+      "prerequisites": []
+    },
+    {
+      "name": "NumPy",
+      "aliases": [
+        "numpy arrays",
+        "numerical python"
+      ],
+      "prerequisites": [
+        "Python"
+      ]
+    },
+    {
+      "name": "Pandas",
+      "aliases": [
+        "pandas data analysis",
+        "data manipulation with pandas"
+      ],
+      "prerequisites": [
+        "Python",
+        "NumPy"
+      ]
+    },
+    {
+      "name": "Statistics",
+      "aliases": [
+        "statistical analysis",
+        "statistics basics"
+      ],
+      "prerequisites": [
+        "Mathematics"
+      ]
+    },
+    {
+      "name": "Probability",
+      "aliases": [
+        "probability theory",
+        "probability basics"
+      ],
+      "prerequisites": [
+        "Mathematics"
+      ]
+    },
+    {
+      "name": "Mathematics",
+      "aliases": [
+        "math",
+        "mathematical foundations"
+      ],
+      "prerequisites": []
+    },
+    {
+      "name": "Machine Learning",
+      "aliases": [
+        "ml",
+        "machine learning algorithms"
+      ],
+      "prerequisites": [
+        "Python",
+        "Statistics",
+        "Probability",
+        "NumPy",
+        "Pandas"
+      ]
+    },
+    {
+      "name": "Deep Learning",
+      "aliases": [
+        "deep neural networks",
+        "neural networks"
+      ],
+      "prerequisites": [
+        "Machine Learning"
+      ]
+    },
+    {
+      "name": "Computer Vision",
+      "aliases": [
+        "image processing",
+        "computer vision ai"
+      ],
+      "prerequisites": [
+        "Python",
+        "NumPy",
+        "Machine Learning"
+      ]
+    },
+    {
+      "name": "Natural Language Processing",
+      "aliases": [
+        "nlp",
+        "text processing",
+        "language ai"
+      ],
+      "prerequisites": [
+        "Python",
+        "Machine Learning"
+      ]
+    },
+    {
+      "name": "Data Visualization",
+      "aliases": [
+        "data charts",
+        "visualizing data"
+      ],
+      "prerequisites": [
+        "Pandas"
+      ]
+    },
+    {
+      "name": "Docker",
+      "aliases": [
+        "containerization",
+        "docker containers"
+      ],
+      "prerequisites": []
+    },
+    {
+      "name": "APIs",
+      "aliases": [
+        "api development",
+        "rest api",
+        "api integration"
+      ],
+      "prerequisites": [
+        "Programming Fundamentals"
+      ]
+    }
+  ],
+  "subjects": [
+    {
+      "name": "Programming",
+      "skills": [
+        "Programming Fundamentals",
+        "Python"
+      ]
+    },
+    {
+      "name": "Data Structures",
+      "skills": [
+        "Data Structures"
+      ]
+    },
+    {
+      "name": "Database Management",
+      "skills": [
+        "SQL"
+      ]
+    },
+    {
+      "name": "Mathematics",
+      "skills": [
+        "Mathematics"
+      ]
+    },
+    {
+      "name": "Statistics",
+      "skills": [
+        "Statistics",
+        "Probability"
+      ]
+    },
+    {
+      "name": "Machine Learning",
+      "skills": [
+        "Machine Learning"
+      ]
+    },
+    {
+      "name": "Artificial Intelligence",
+      "skills": [
+        "Machine Learning",
+        "Deep Learning"
+      ]
+    },
+    {
+      "name": "Computer Networks",
+      "skills": [
+        "APIs"
+      ]
+    }
+  ],
+  "roles": {
+    "Machine Learning Engineer": {
+      "aliases": [
+        "ml engineer",
+        "machine learning developer"
+      ],
+      "skills": [
+        "Python",
+        "Statistics",
+        "Probability",
+        "NumPy",
+        "Pandas",
+        "Machine Learning",
+        "Deep Learning"
+      ]
+    },
+    "Data Scientist": {
+      "aliases": [
+        "data science",
+        "data analyst scientist"
+      ],
+      "skills": [
+        "Python",
+        "SQL",
+        "Statistics",
+        "Probability",
+        "NumPy",
+        "Pandas",
+        "Machine Learning",
+        "Data Visualization"
+      ]
+    },
+    "Computer Vision Engineer": {
+      "aliases": [
+        "cv engineer",
+        "computer vision developer"
+      ],
+      "skills": [
+        "Python",
+        "NumPy",
+        "Machine Learning",
+        "Deep Learning",
+        "Computer Vision"
+      ]
+    },
+    "NLP Engineer": {
+      "aliases": [
+        "natural language processing engineer",
+        "nlp developer"
+      ],
+      "skills": [
+        "Python",
+        "Machine Learning",
+        "Deep Learning",
+        "Natural Language Processing"
+      ]
+    },
+    "Backend Developer": {
+      "aliases": [
+        "back end developer",
+        "backend engineer"
+      ],
+      "skills": [
+        "Programming Fundamentals",
+        "Data Structures",
+        "Git",
+        "SQL",
+        "APIs",
+        "Docker"
+      ]
+    }
+  }
+}
