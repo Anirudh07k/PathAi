@@ -1,67 +1,166 @@
 # PathAI — AI-Powered Personalized Academic and Career Pathway Recommendation System
 
-PathAI is an academic and career guidance prototype that helps students compare their current skills with a target role, identify skill gaps, and generate a prerequisite-ordered learning pathway.
+PathAI is a student project prototype that helps learners connect their current academic background and skills to a target career. It compares a student profile with role requirements, identifies skill gaps, and proposes an ordered learning pathway.
 
-## Current features
+## Project status
 
-- FastAPI backend with a POST /analyze endpoint.
-- Pretrained Sentence Transformers model (all-MiniLM-L6-v2) for semantic matching of free-text student descriptions to skills.
-- JSON knowledge base for skills, academic subjects, career roles, aliases, and prerequisites.
-- Skill-gap analysis and an indicative readiness percentage.
-- Explainable learning-path entries based on structured prerequisite relationships.
+**Implemented so far**
+- FastAPI backend with `GET /`, `GET /health`, and `POST /analyze` endpoints.
+- Semantic skill matching for free-text profile descriptions using the pretrained Sentence Transformers model `all-MiniLM-L6-v2`.
+- Cosine-similarity scoring through scikit-learn.
+- JSON knowledge base covering academic subjects, skills, aliases, career roles, and prerequisites.
+- Skill-gap analysis, prerequisite-aware learning path ordering, and an indicative readiness percentage.
+- React + Vite frontend with responsive CSS styling.
+- Student profile form for selecting subjects, existing skills, optional profile text, and a target role.
+- Results view for the pathway, skill gaps, readiness indicator, and skills detected from profile text.
+- Vite development proxy configured to forward `/api/*` requests to the FastAPI backend.
 
-## Current status
+**Still to do**
+- Run and verify the full frontend-to-backend workflow on the development machine.
+- Expand automated tests and validate API response edge cases.
+- Improve and evaluate semantic-matching thresholds with representative examples.
+- Optionally add persistent profiles, richer learning resources, and deployment configuration.
 
-This is an in-progress prototype. The backend API is the current interface; a React/Tailwind frontend, persistent student database, resume upload flow, and LLM-generated explanations are future work. The readiness score is an indicative score based on configured role requirements, not a prediction or guarantee of employability.
-
-## Requirements
-
-- Python 3.10 or newer recommended
-- Internet connection on first run to download the pretrained Sentence Transformers model
-
-## Setup (Windows / VS Code)
-
-Open a terminal in the repository root (the folder containing app, tests, and requirements.txt).
-
-    python -m pip install -r requirements.txt
-    python -m uvicorn app.main:app --reload
-
-Open the interactive API docs at http://127.0.0.1:8000/docs.
-
-## Example request
-
-In Swagger, open POST /analyze, click Try it out, and submit:
-
-    {
-      "subjects": ["Programming", "Statistics", "Mathematics"],
-      "skills": ["Python"],
-      "profile_text": "I have written Python programs, worked with numerical arrays using NumPy, and analyzed datasets with Pandas.",
-      "target_role": "Machine Learning Engineer"
-    }
-
-## Project structure
-
-    app/
-      main.py
-      data/knowledge_base.json
-      services/
-        pathway.py
-        semantic_matcher.py
-    tests/
-      test_pathway.py
-      test_semantic_matcher.py
-    requirements.txt
+This is an in-progress prototype. The readiness percentage is an indicative match against the project's configured role requirements; it is not a prediction or guarantee of employability.
 
 ## Technology stack
 
+### Backend
 - Python
 - FastAPI and Pydantic
-- Sentence Transformers (all-MiniLM-L6-v2)
+- Sentence Transformers — `all-MiniLM-L6-v2`
 - scikit-learn cosine similarity
-- Python graph traversal for prerequisite reasoning
-- JSON knowledge base
-- pytest for tests
+- JSON-based skill and career knowledge base
+- pytest
 
-## Important implementation note
+### Frontend
+- React
+- Vite
+- Lucide React icons
+- Custom responsive CSS
+- npm
 
-The semantic model proposes related skills from free text; the structured knowledge base remains the source of truth for career requirements and prerequisites. Semantic matches should be reviewed and tuned against real test examples before relying on them for consequential decisions.
+## Project structure
+
+```text
+PathAi/
+├── app/
+│   ├── main.py
+│   ├── data/
+│   │   └── knowledge_base.json
+│   └── services/
+│       ├── pathway.py
+│       └── semantic_matcher.py
+├── frontend/
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── vite.config.js
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   └── README.md
+├── tests/
+│   ├── test_pathway.py
+│   └── test_semantic_matcher.py
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+## Prerequisites
+
+- Python 3.10+ recommended for the backend.
+- Node.js and npm compatible with the installed Vite version.
+- Internet access on the first backend run so the pretrained sentence-transformer model can be downloaded.
+
+## Run the project locally (Windows / VS Code)
+
+Run the backend and frontend in **two separate terminals**.
+
+### 1. Install backend dependencies
+
+From the repository root (the directory containing `app`, `frontend`, and `requirements.txt`):
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+### 2. Start the FastAPI backend
+
+In the first terminal, still at the repository root:
+
+```powershell
+python -m uvicorn app.main:app --reload
+```
+
+Wait for Uvicorn to report that the application has started. Useful URLs:
+
+- API health check: http://127.0.0.1:8000/health
+- Interactive API documentation: http://127.0.0.1:8000/docs
+- Root endpoint: http://127.0.0.1:8000/
+
+Keep this terminal open while using the frontend.
+
+### 3. Install and start the frontend
+
+Open a second terminal from the repository root:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open the local URL printed by Vite, commonly http://localhost:5173.
+
+The Vite configuration proxies frontend requests from `/api` to `http://127.0.0.1:8000`. Keep the backend running for profile analysis to work. If the frontend reports a network/API error, first confirm that the backend's `/health` URL responds successfully.
+
+### 4. Create a production frontend build
+
+From the `frontend` directory:
+
+```powershell
+npm run build
+npm run preview
+```
+
+## API example
+
+The frontend sends a request to `POST /analyze`. You can also try the endpoint directly in Swagger at http://127.0.0.1:8000/docs.
+
+Example request body:
+
+```json
+{
+  "subjects": ["Programming", "Statistics", "Mathematics"],
+  "skills": ["Python", "Git"],
+  "profile_text": "I have written Python programs and enjoy analyzing data. I want to learn how machine learning models work.",
+  "target_role": "Machine Learning Engineer"
+}
+```
+
+The API response includes the target role, skills detected from free text, semantic matches, and a `pathway_analysis` containing the pathway analysis results.
+
+Available target roles are defined in `app/data/knowledge_base.json`; the frontend currently presents these options:
+- Machine Learning Engineer
+- Data Scientist
+- Computer Vision Engineer
+- NLP Engineer
+- Backend Developer
+
+## Run backend tests
+
+From the repository root:
+
+```powershell
+python -m pytest
+```
+
+## Notes and limitations
+
+- The semantic model suggests skills from free-text descriptions. The structured knowledge base remains the source of truth for configured career requirements and prerequisites.
+- Semantic matches and the threshold should be tested and tuned against representative student profiles.
+- Readiness results depend on the roles and skills configured in the knowledge base and should be treated as guidance only.
+- Do not commit `node_modules`, Python virtual environments, model caches, or secrets. The frontend dependency manifests (`package.json` and `package-lock.json`) should be committed so dependencies can be installed with `npm install`.
