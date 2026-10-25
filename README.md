@@ -1,10 +1,18 @@
 # PathAI — AI-Powered Personalized Academic and Career Pathway Recommendation System
 
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Project-In%20Progress-E0A12F?style=flat-square" alt="Project in progress" />
+</p>
+
 PathAI is a student project prototype that helps learners connect their current academic background and skills to a target career. It compares a student profile with role requirements, identifies skill gaps, and proposes an ordered learning pathway.
 
-## Project status
+## 🚀 Project status
 
-**Implemented so far**
+### 🟢 Implemented so far
 - FastAPI backend with `GET /`, `GET /health`, and `POST /analyze` endpoints.
 - Semantic skill matching for free-text profile descriptions using the pretrained Sentence Transformers model `all-MiniLM-L6-v2`.
 - Cosine-similarity scoring through scikit-learn.
@@ -15,7 +23,7 @@ PathAI is a student project prototype that helps learners connect their current 
 - Results view for the pathway, skill gaps, readiness indicator, and skills detected from profile text.
 - Vite development proxy configured to forward `/api/*` requests to the FastAPI backend.
 
-**Still to do**
+### 🟡 Still to do
 - Run and verify the full frontend-to-backend workflow on the development machine.
 - Expand automated tests and validate API response edge cases.
 - Improve and evaluate semantic-matching thresholds with representative examples.
@@ -23,9 +31,9 @@ PathAI is a student project prototype that helps learners connect their current 
 
 This is an in-progress prototype. The readiness percentage is an indicative match against the project's configured role requirements; it is not a prediction or guarantee of employability.
 
-## Technology stack
+## 🧰 Technology stack
 
-### Backend
+### 🐍 Backend
 - Python
 - FastAPI and Pydantic
 - Sentence Transformers — `all-MiniLM-L6-v2`
@@ -33,14 +41,14 @@ This is an in-progress prototype. The readiness percentage is an indicative matc
 - JSON-based skill and career knowledge base
 - pytest
 
-### Frontend
+### 🎨 Frontend
 - React
 - Vite
 - Lucide React icons
 - Custom responsive CSS
 - npm
 
-## Project structure
+## 📁 Project structure
 
 ```text
 PathAi/
@@ -69,13 +77,13 @@ PathAi/
 └── README.md
 ```
 
-## Prerequisites
+## ✅ Prerequisites
 
 - Python 3.10+ recommended for the backend.
 - Node.js and npm compatible with the installed Vite version.
 - Internet access on the first backend run so the pretrained sentence-transformer model can be downloaded.
 
-## Run the project locally (Windows / VS Code)
+## ⚙️ Run the project locally (Windows / VS Code)
 
 Run the backend and frontend in **two separate terminals**.
 
@@ -126,7 +134,7 @@ npm run build
 npm run preview
 ```
 
-## API example
+## 🔌 API example
 
 The frontend sends a request to `POST /analyze`. You can also try the endpoint directly in Swagger at http://127.0.0.1:8000/docs.
 
@@ -150,7 +158,7 @@ Available target roles are defined in `app/data/knowledge_base.json`; the fronte
 - NLP Engineer
 - Backend Developer
 
-## Run backend tests
+## 🧪 Run backend tests
 
 From the repository root:
 
@@ -158,7 +166,7 @@ From the repository root:
 python -m pytest
 ```
 
-## Notes and limitations
+## 📝 Notes and limitations
 
 - The semantic model suggests skills from free-text descriptions. The structured knowledge base remains the source of truth for configured career requirements and prerequisites.
 - Semantic matches and the threshold should be tested and tuned against representative student profiles.
