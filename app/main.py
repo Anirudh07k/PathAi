@@ -83,3 +83,17 @@ def analyze_student(profile: StudentProfile):
         "semantic_matches": semantic_results,
         "pathway_analysis": pathway_result,
     }
+
+
+from app.services.optimizer import compare_roles
+
+
+class CareerComparisonRequest(BaseModel):
+    skills: list[str] = Field(default_factory=list)
+    days: int = Field(ge=1, le=365)
+    hours_per_day: float = Field(gt=0, le=24)
+
+
+@app.post("/compare-careers")
+def compare_careers(profile: CareerComparisonRequest):
+    return compare_roles(profile.skills, profile.days * profile.hours_per_day)
