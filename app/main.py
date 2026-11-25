@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, UploadFile, File
+from functools import lru_cache
+import re
 from pydantic import BaseModel, Field
 
 from app.services.pathway import analyze
@@ -11,7 +13,9 @@ app = FastAPI(
 )
 
 # The model is loaded once when the application module starts.
-semantic_matcher = SemanticSkillMatcher()
+@lru_cache(maxsize=1)
+def get_matcher():
+    return SemanticSkillMatcher()
 
 
 class StudentProfile(BaseModel):
@@ -61,7 +65,7 @@ def analyze_student(profile: StudentProfile):
     semantic_results = []
 
     if profile.profile_text.strip():
-        semantic_results = semantic_matcher.match_skills(
+        semantic_results = get_matcher().match_skills(
             profile.profile_text,
             SKILL_DATABASE,
             threshold=0.45,
@@ -83,3 +87,77 @@ def analyze_student(profile: StudentProfile):
         "semantic_matches": semantic_results,
         "pathway_analysis": pathway_result,
     }
+
+
+from app.services.optimizer import plan, compare_roles
+from app.services.pathway import ALIASES, normalize_exact, ROLES
+
+
+def extract_skills(text):
+    evidence = {}
+    for line in re.split(r"[\n;]+", text):
+        line = line.strip()
+        if not line:
+            continue
+        for alias, skill in ALIASES.items():
+            if re.search(r"(?<!\w)" + re.escape(alias) + r"(?!\w)", line, re.I):
+                evidence.setdefault(skill, {"skill": skill, "method": "alias", "evidence": line[:300]})
+    # Semantic suggestions are candidates, not verified requirements.
+    for chunk in [text[i:i+600] for i in range(0, len(text), 600)]:
+        if chunk.strip():
+            for match in get_matcher().match_skills(chunk, SKILL_DATABASE, threshold=0.55):
+                evidence.setdefault(match["skill"], {**match, "method": "semantic", "evidence": chunk[:300]})
+    return sorted(evidence.values(), key=lambda item: item["skill"])
+
+
+@app.post("/extract-pdf")
+async def extract_pdf(file: UploadFile = File(...)):
+    import pymupdf
+    raw = await file.read(10 * 1024 * 1024 + 1)
+    if len(raw) > 10 * 1024 * 1024:
+        raise HTTPException(413, "PDF must be at most 10 MB")
+    try:
+        with pymupdf.open(stream=raw, filetype="pdf") as doc:
+            if len(doc) > 100:
+                raise HTTPException(400, "PDF must have at most 100 pages")
+            text = "\n".join(page.get_text() for page in doc)
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(400, "Cannot read PDF")
+    if not text.strip():
+        raise HTTPException(400, "No extractable text; scanned PDFs are not supported")
+    return {"text": text[:30000], "truncated": len(text) > 30000}
+
+
+class Documents(BaseModel):
+    syllabus: str = Field(max_length=30000)
+    job_description: str = Field(max_length=30000)
+
+
+@app.post("/extract-skills")
+def extract_documents(data: Documents):
+    return {"curriculum": extract_skills(data.syllabus),
+            "job": extract_skills(data.job_description)}
+
+
+class PlanningRequest(BaseModel):
+    curriculum_skills: list[str] = Field(default_factory=list)
+    required_skills: list[str] = Field(min_length=1)
+    known_skills: list[str] = Field(default_factory=list)
+    days: int = Field(ge=1, le=365)
+    hours_per_day: float = Field(gt=0, le=24)
+
+
+@app.post("/plan")
+def generate_plan(data: PlanningRequest):
+    curriculum, a = normalize_exact(data.curriculum_skills)
+    required, b = normalize_exact(data.required_skills)
+    known, c = normalize_exact(data.known_skills)
+    if a or b or c or not required:
+        raise HTTPException(400, "Confirm recognized skills before planning")
+    budget = data.days * data.hours_per_day
+    return {"curriculum_gaps": sorted(set(required) - set(curriculum)),
+            "personal_gaps": sorted(set(required) - set(known)),
+            "plan": plan(required, known, budget),
+            **compare_roles(known, budget)}
